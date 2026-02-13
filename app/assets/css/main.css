@@ -118,3 +118,66 @@
     @apply bg-background text-foreground;
   }
 }
+
+:root {
+  --emerald: #064e3b;
+  --gold: #d4af37;
+  --cream: #fbfbf9;
+}
+
+body {
+  font-family:
+    "Plus Jakarta Sans",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background-color: var(--cream);
+  color: #374151;
+}
+
+h1,
+h2,
+h3,
+.serif {
+  font-family: "Gambetta", ui-serif, Georgia, "Times New Roman", serif;
+}
+
+.bg-emerald-syariah {
+  background-color: var(--emerald);
+}
+
+.text-emerald-syariah {
+  color: var(--emerald);
+}
+
+.btn-gold {
+  background-color: var(--gold);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background-color: #b8962d;
+  transform: translateY(-2px);
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+}
+
+.card-hover {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.1);
+}
+
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.12 6.52 6.88-2.12-2.12 6.88 6.52 2.12-6.52 2.12 2.12 6.88-6.88-2.12L30 30l-2.12-6.52-6.88 2.12 2.12-6.88-6.52-2.12 6.52-2.12-2.12-6.88 6.88 2.12L30 0z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
