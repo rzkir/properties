@@ -133,3 +133,83 @@ export const testimonials: Testimonial[] = [
             'Lingkungannya adem dan hijau, anak-anak betah bermain di taman cluster. Komunitas penghuninya juga aktif mengadakan kajian dan kegiatan sosial.'
     }
 ];
+
+export const aboutStats = [
+    {
+        id: 1,
+        value: '12,500+',
+        label: 'Pembeli Puas',
+        icon: 'lucide:users'
+    },
+    {
+        id: 2,
+        value: '1,200+',
+        label: 'Properti Terdaftar',
+        icon: 'lucide:home'
+    },
+    {
+        id: 3,
+        value: '850+',
+        label: 'Proyek Selesai',
+        icon: 'lucide:check-circle'
+    },
+    {
+        id: 4,
+        value: '8 Tahun',
+        label: 'Pengalaman',
+        icon: 'lucide:award'
+    }
+] as const;
+
+export const aboutTeamMembers = [
+    {
+        id: 1,
+        name: 'H. Ahmad Fauzan',
+        role: 'Founder & CEO',
+        subtitle: 'Expert in Islamic Real Estate Development',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+        id: 2,
+        name: 'Siti Rahayu, M.E.',
+        role: 'Head of Finance',
+        subtitle: 'Syariah Economics Specialist',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+        id: 3,
+        name: 'Ibrahim Malik, S.H.',
+        role: 'Legal & Compliance',
+        subtitle: 'Islamic Contract Law Expert',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+        id: 4,
+        name: 'Nadia Jasmine',
+        role: 'Public Relations',
+        subtitle: 'Community Engagement Director',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=400'
+    }
+] as const;
+
+export const aboutCertifications = [
+    {
+        id: 1,
+        title: 'DSN-MUI Approved',
+        icon: 'mdi:certificate'
+    },
+    {
+        id: 2,
+        title: 'Verified Secure',
+        icon: 'mdi:shield-check'
+    },
+    {
+        id: 3,
+        title: 'Halal Compliance',
+        icon: 'mdi:scale-balance'
+    }
+] as const;
