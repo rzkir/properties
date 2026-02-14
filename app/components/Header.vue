@@ -11,35 +11,77 @@
             </div>
 
             <nav class="hidden md:flex items-center gap-8">
-                <NuxtLink href="/" id="nav-home"
-                    class="text-sm font-semibold text-emerald-syariah border-b-2 border-[#D4AF37] pb-1">
+                <NuxtLink
+                    to="/"
+                    id="nav-home"
+                    :class="[
+                        'text-sm transition-colors',
+                        route.path === '/' 
+                            ? 'font-semibold text-emerald-syariah border-b-2 border-[#D4AF37] pb-1' 
+                            : 'font-medium text-gray-600 hover:text-emerald-syariah'
+                    ]"
+                >
                     Beranda
                 </NuxtLink>
-                <NuxtLink href="/search" id="nav-listing"
-                    class="text-sm font-medium text-gray-600 hover:text-emerald-syariah transition-colors">
+                <NuxtLink
+                    to="/search"
+                    id="nav-listing"
+                    :class="[
+                        'text-sm transition-colors',
+                        route.path === '/search' 
+                            ? 'font-semibold text-emerald-syariah border-b-2 border-[#D4AF37] pb-1' 
+                            : 'font-medium text-gray-600 hover:text-emerald-syariah'
+                    ]"
+                >
                     Cari Properti
                 </NuxtLink>
-                <NuxtLink href="/about" id="nav-about"
-                    class="text-sm font-medium text-gray-600 hover:text-emerald-syariah transition-colors">
+                <NuxtLink
+                    to="/about"
+                    id="nav-about"
+                    :class="[
+                        'text-sm transition-colors',
+                        route.path === '/about' 
+                            ? 'font-semibold text-emerald-syariah border-b-2 border-[#D4AF37] pb-1' 
+                            : 'font-medium text-gray-600 hover:text-emerald-syariah'
+                    ]"
+                >
                     Tentang Kami
                 </NuxtLink>
-                <NuxtLink href="/faq" id="nav-faq"
-                    class="text-sm font-medium text-gray-600 hover:text-emerald-syariah transition-colors">
+                <NuxtLink
+                    to="/faqs"
+                    id="nav-faq"
+                    :class="[
+                        'text-sm transition-colors',
+                        route.path === '/faqs' 
+                            ? 'font-semibold text-emerald-syariah border-b-2 border-[#D4AF37] pb-1' 
+                            : 'font-medium text-gray-600 hover:text-emerald-syariah'
+                    ]"
+                >
                     FAQ
                 </NuxtLink>
             </nav>
 
             <div class="flex items-center gap-4">
-                <NuxtLink href="#" id="nav-login"
-                    class="text-sm font-semibold text-emerald-syariah px-4 py-2 hover:bg-emerald-50 rounded-lg transition-all">
+                <NuxtLink
+                    to="/signin"
+                    id="nav-login"
+                    class="text-sm font-semibold text-emerald-syariah px-4 py-2 hover:bg-emerald-50 rounded-lg transition-all"
+                >
                     Masuk
                 </NuxtLink>
 
-                <NuxtLink href="#" id="nav-register"
-                    class="bg-emerald-syariah text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-lg shadow-emerald-900/10 hover:bg-emerald-800 transition-all">
+                <NuxtLink
+                    to="/signup"
+                    id="nav-register"
+                    class="bg-emerald-syariah text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-lg shadow-emerald-900/10 hover:bg-emerald-800 transition-all"
+                >
                     Daftar
                 </NuxtLink>
             </div>
         </div>
     </header>
 </template>
+
+<script setup lang="ts">
+const route = useRoute()
+</script>

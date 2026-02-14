@@ -1,8 +1,10 @@
 <template>
   <NuxtLayout>
-    <Header />
-    <NuxtPage />
-    <Footer />
+    <AuthContext>
+      <Header />
+      <NuxtPage />
+      <Footer />
+    </AuthContext>
   </NuxtLayout>
 </template>
 

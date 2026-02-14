@@ -28,7 +28,7 @@
                     class="bg-white p-8 rounded-3xl shadow-soft border border-gray-50 flex flex-col items-center text-center">
                     <div
                         class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-syariah text-2xl mb-4">
-                        <iconify-icon :icon="stat.icon"></iconify-icon>
+                        <Icon :name="stat.icon" />
                     </div>
                     <span class="text-3xl font-bold text-emerald-syariah">{{ stat.value }}</span>
                     <span class="text-sm text-gray-400 mt-1 uppercase font-semibold tracking-tighter">
@@ -39,7 +39,7 @@
         </section>
 
         <!-- Company Profile & Visi Misi -->
-        <section class="py-24 px-4 md:px-6">
+        <section class="py-10 px-4 md:px-6">
             <div class="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
                 <div class="relative">
                     <div class="aspect-square rounded-[40px] overflow-hidden shadow-2xl">
@@ -73,7 +73,7 @@
                         <div class="space-y-4">
                             <div
                                 class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-syariah text-xl">
-                                <iconify-icon icon="lucide:eye"></iconify-icon>
+                                <Icon name="lucide:eye" />
                             </div>
                             <h3 class="text-xl font-bold text-emerald-syariah">Visi</h3>
                             <p class="text-sm text-gray-500 leading-relaxed">
@@ -84,7 +84,7 @@
                         <div class="space-y-4">
                             <div
                                 class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-syariah text-xl">
-                                <iconify-icon icon="lucide:compass"></iconify-icon>
+                                <Icon name="lucide:compass" />
                             </div>
                             <h3 class="text-xl font-bold text-emerald-syariah">Misi</h3>
                             <p class="text-sm text-gray-500 leading-relaxed">
@@ -108,20 +108,19 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     <article v-for="member in aboutTeamMembers" :key="member.id" class="group">
-                        <div class="relative aspect-[3/4] rounded-[32px] overflow-hidden mb-6">
+                        <div class="relative aspect-3/4 rounded-[32px] overflow-hidden mb-6">
                             <img :src="member.avatarUrl" :alt="member.name"
                                 class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110">
                             <div
-                                class="absolute inset-0 bg-gradient-to-t from-emerald-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+                                class="absolute inset-0 bg-linear-to-t from-emerald-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
                                 <div class="flex gap-4">
                                     <button
                                         class="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-[#D4AF37] transition-colors">
-                                        <iconify-icon icon="lucide:linkedin"></iconify-icon>
+                                        <Icon name="lucide:linkedin" />
                                     </button>
                                     <button v-if="member.id === 1 || member.id === 2"
                                         class="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-[#D4AF37] transition-colors">
-                                        <iconify-icon
-                                            :icon="member.id === 1 ? 'lucide:twitter' : 'lucide:instagram'"></iconify-icon>
+                                        <Icon :name="member.id === 1 ? 'lucide:twitter' : 'lucide:instagram'" />
                                     </button>
                                 </div>
                             </div>
@@ -143,7 +142,7 @@
             <div class="container mx-auto">
                 <div class="bg-emerald-syariah rounded-[48px] p-12 lg:p-20 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
-                        <iconify-icon icon="mdi:mosque" class="text-[300px] text-white"></iconify-icon>
+                        <Icon name="mdi:mosque" class="text-[300px] text-white" />
                     </div>
                     <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <div class="text-white">
@@ -159,21 +158,21 @@
                                 <li class="flex items-center gap-3">
                                     <div
                                         class="w-6 h-6 rounded-full bg-[#D4AF37] flex items-center justify-center text-[12px]">
-                                        <iconify-icon icon="lucide:check"></iconify-icon>
+                                        <Icon name="lucide:check" />
                                     </div>
                                     <span class="text-emerald-50">Audit Rutin Setiap 6 Bulan</span>
                                 </li>
                                 <li class="flex items-center gap-3">
                                     <div
                                         class="w-6 h-6 rounded-full bg-[#D4AF37] flex items-center justify-center text-[12px]">
-                                        <iconify-icon icon="lucide:check"></iconify-icon>
+                                        <Icon name="lucide:check" />
                                     </div>
                                     <span class="text-emerald-50">Pendampingan Akad Oleh Ustadz Expert</span>
                                 </li>
                                 <li class="flex items-center gap-3">
                                     <div
                                         class="w-6 h-6 rounded-full bg-[#D4AF37] flex items-center justify-center text-[12px]">
-                                        <iconify-icon icon="lucide:check"></iconify-icon>
+                                        <Icon name="lucide:check" />
                                     </div>
                                     <span class="text-emerald-50">Transparansi Cash Flow Developer</span>
                                 </li>
@@ -182,9 +181,9 @@
                         <div class="flex flex-wrap justify-center gap-8">
                             <div v-for="cert in aboutCertifications" :key="cert.id"
                                 class="bg-white/10 backdrop-blur p-8 rounded-[32px] border border-white/20 w-48 text-center flex flex-col items-center gap-4">
-                                <iconify-icon :icon="cert.icon" class="text-5xl text-[#D4AF37]"></iconify-icon>
+                                <Icon :name="cert.icon" class="text-5xl text-[#D4AF37]" />
                                 <span class="text-white text-xs font-bold uppercase tracking-widest">{{ cert.title
-                                    }}</span>
+                                }}</span>
                             </div>
                         </div>
                     </div>
@@ -202,7 +201,7 @@
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="/search"
                         class="bg-emerald-syariah text-white px-10 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-900/20 hover:bg-emerald-800 transition-all flex items-center justify-center gap-2">
-                        <iconify-icon icon="lucide:search"></iconify-icon>
+                        <Icon name="lucide:search" />
                         Cari Properti Sekarang
                     </a>
                     <a href="#"
