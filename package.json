@@ -41,6 +41,7 @@
     "@iconify-json/lucide": "^1.2.90",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^25.2.3",
+    "commander": "^13.1.0",
     "cross-env": "^7.0.3",
     "rollup-plugin-visualizer": "^5.14.0",
     "tailwindcss": "^4.1.18",
