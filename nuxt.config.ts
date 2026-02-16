@@ -1,13 +1,17 @@
+// @ts-ignore - package has no bundled type declarations
 import tailwindcss from "@tailwindcss/vite";
-
+// @ts-ignore - types are not required for this build-time plugin
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   typescript: {
     typeCheck: false,
+    shim: false,
+    strict: false,
   },
-  ssr: true,
+  ssr: false,
   devtools: { enabled: true },
   css: ["./app/assets/css/main.css", "vue-sonner/style.css"],
   modules: ["shadcn-nuxt", "@nuxt/icon"],
@@ -26,6 +30,7 @@ export default defineNuxtConfig({
       firebaseMeasurementId: "",
     },
   },
+  // @ts-ignore - extended by @nuxt/icon module at runtime
   icon: {
     size: "24px",
     class: "inline-block align-middle",
@@ -52,6 +57,15 @@ export default defineNuxtConfig({
             ],
           },
         },
+        plugins: (process.env.ANALYZE === "true"
+          ? [
+              visualizer({
+                filename: "stats.html",
+                gzipSize: true,
+                brotliSize: true,
+              }),
+            ]
+          : []) as any,
       },
     },
   },
