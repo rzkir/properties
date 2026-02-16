@@ -17,6 +17,8 @@ export default defineNuxtConfig({
   modules: ["shadcn-nuxt", "@nuxt/icon"],
   runtimeConfig: {
     public: {
+      apiSecret: "",
+      apiUrl: "",
       imgkitPublicKey: "",
       imgkitPrivateKey: "",
       imgkitUrlEndpoint: "",
