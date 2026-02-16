@@ -166,40 +166,18 @@
 import UiInput from '@/components/ui/input/Input.vue'
 import UiButton from '@/components/ui/button/Button.vue'
 import UiLabel from '@/components/ui/label/Label.vue'
-import { useAuthContext } from '@/lib/AuthContext'
+import { useSignUpState } from '@/services/useStateAuth'
 
-const router = useRouter()
-const { signUp, loading, error } = useAuthContext()
-
-const name = ref('')
-const email = ref('')
-const phone = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const agreeTerms = ref(false)
-
-const onSubmit = async () => {
-    if (password.value !== confirmPassword.value) {
-        // eslint-disable-next-line no-alert
-        alert('Kata sandi dan konfirmasi tidak sama.')
-        return
-    }
-
-    if (!agreeTerms.value) {
-        // eslint-disable-next-line no-alert
-        alert('Anda harus menyetujui syarat & ketentuan terlebih dahulu.')
-        return
-    }
-
-    try {
-        await signUp(name.value, email.value, phone.value, password.value)
-        // Redirect setelah registrasi sukses (misal ke halaman login)
-        router.push('/signin')
-    } catch (e) {
-        // eslint-disable-next-line no-alert
-        alert(error.value || 'Gagal mendaftar. Silakan coba lagi.')
-    }
-}
+const {
+    name,
+    email,
+    phone,
+    password,
+    confirmPassword,
+    agreeTerms,
+    loading,
+    onSubmit,
+} = useSignUpState()
 
 useHead({
     title: 'Registrasi | Direktori Properti Syariah'

@@ -1,14 +1,39 @@
 <template>
   <NuxtLayout>
     <AuthContext>
-      <Header />
+      <template v-if="!isRoute">
+        <Header />
+      </template>
       <NuxtPage />
-      <Footer />
+      <template v-if="!isRoute">
+        <Footer />
+      </template>
+      <ClientOnly>
+        <Toaster position="top-center" rich-colors :toast-options="{
+          duration: 3000,
+          className: 'font-medium',
+        }" />
+        <template #fallback />
+      </ClientOnly>
     </AuthContext>
   </NuxtLayout>
 </template>
 
 <script setup>
+import { Toaster } from '@/components/ui/sonner'
+
+const route = useRoute()
+const pathname = computed(() => route.path)
+
+const isRoute = computed(
+  () =>
+    pathname.value?.includes('/signin') ||
+    pathname.value?.includes('/signup') ||
+    pathname.value?.includes('/dashboard') ||
+    pathname.value?.includes('/profile') ||
+    false
+)
+
 useHead({
   title: 'SyariahPro | Direktori Properti Syariah Nomor #1 di Indonesia',
   htmlAttrs: {

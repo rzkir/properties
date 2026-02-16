@@ -182,6 +182,86 @@ h3,
   box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.1);
 }
 
+.accent-gold,
+.text-gold-accent {
+  color: var(--gold);
+}
+
+.bg-gold-accent {
+  background-color: var(--gold);
+}
+
+.border-gold-accent {
+  border-color: var(--gold);
+}
+
+.nav-active,
+.sidebar-item-active {
+  background-color: var(--emerald);
+  color: white !important;
+}
+
+.text-gold-syariah {
+  color: var(--gold);
+}
+
+.border-gold-syariah {
+  border-color: var(--gold);
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.toggle-switch .slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: var(--emerald);
+}
+
+.toggle-switch input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+.status-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .islamic-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.12 6.52 6.88-2.12-2.12 6.88 6.52 2.12-6.52 2.12 2.12 6.88-6.88-2.12L30 30l-2.12-6.52-6.88 2.12 2.12-6.88-6.52-2.12 6.52-2.12-2.12-6.88 6.88 2.12L30 0z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
 }

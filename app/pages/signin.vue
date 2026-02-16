@@ -62,7 +62,8 @@
                     </label>
 
                     <NuxtLink to="#" id="forgot-password-link"
-                        class="font-semibold text-emerald-syariah hover:text-emerald-800 transition-colors">
+                        class="font-semibold text-emerald-syariah hover:text-emerald-800 transition-colors"
+                        @click.prevent="onForgotPassword">
                         Lupa kata sandi?
                     </NuxtLink>
                 </div>
@@ -90,9 +91,12 @@
                 <!-- Social -->
                 <div class="grid grid-cols-1 gap-3">
                     <UiButton id="btn-google-login" type="button" variant="outline"
-                        class="w-full justify-center border-gray-200 rounded-2xl bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50 gap-3 h-11">
-                        <Icon name="logos:google-icon" class="text-lg" />
-                        <span>Google</span>
+                        class="w-full justify-center border-gray-200 rounded-2xl bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50 gap-3 h-11 disabled:opacity-70"
+                        :disabled="loading"
+                        @click="onGoogleSignIn">
+                        <Icon v-if="loading" name="lucide:loader-2" class="text-lg animate-spin" />
+                        <Icon v-else name="logos:google-icon" class="text-lg" />
+                        <span>{{ loading ? 'Memproses...' : 'Google' }}</span>
                     </UiButton>
                 </div>
             </form>
@@ -113,58 +117,19 @@
 import UiInput from '@/components/ui/input/Input.vue'
 import UiButton from '@/components/ui/button/Button.vue'
 import UiLabel from '@/components/ui/label/Label.vue'
-import { useAuthContext } from '@/lib/AuthContext'
+import { useSignInState } from '@/services/useStateAuth'
 
-const router = useRouter()
-const { signIn, signInWithGoogle, resetPassword, loading, error } = useAuthContext()
-
-const email = ref('')
-const password = ref('')
-const rememberMe = ref(false)
-const showPassword = ref(false)
-
-const togglePassword = () => {
-    showPassword.value = !showPassword.value
-}
-
-const onSubmit = async () => {
-    try {
-        await signIn(email.value, password.value)
-        // Redirect setelah login sukses
-        router.push('/')
-    } catch (e) {
-        // Bisa diganti toast / UI notifikasi
-        // eslint-disable-next-line no-alert
-        alert(error.value || 'Gagal masuk. Silakan coba lagi.')
-    }
-}
-
-const onForgotPassword = async () => {
-    if (!email.value) {
-        // eslint-disable-next-line no-alert
-        alert('Silakan isi email terlebih dahulu.')
-        return
-    }
-
-    try {
-        await resetPassword(email.value)
-        // eslint-disable-next-line no-alert
-        alert('Link reset password telah dikirim ke email Anda.')
-    } catch (e) {
-        // eslint-disable-next-line no-alert
-        alert(error.value || 'Gagal mengirim link reset password.')
-    }
-}
-
-const onGoogleSignIn = async () => {
-    try {
-        await signInWithGoogle()
-        router.push('/')
-    } catch (e) {
-        // eslint-disable-next-line no-alert
-        alert(error.value || 'Gagal masuk dengan Google.')
-    }
-}
+const {
+    email,
+    password,
+    rememberMe,
+    showPassword,
+    loading,
+    togglePassword,
+    onSubmit,
+    onForgotPassword,
+    onGoogleSignIn,
+} = useSignInState()
 
 useHead({
     title: 'Masuk | SyariahPro Indonesia'

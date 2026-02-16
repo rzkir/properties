@@ -62,26 +62,34 @@
             </nav>
 
             <div class="flex items-center gap-4">
-                <NuxtLink
-                    to="/signin"
-                    id="nav-login"
-                    class="text-sm font-semibold text-emerald-syariah px-4 py-2 hover:bg-emerald-50 rounded-lg transition-all"
-                >
-                    Masuk
-                </NuxtLink>
-
-                <NuxtLink
-                    to="/signup"
-                    id="nav-register"
-                    class="bg-emerald-syariah text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-lg shadow-emerald-900/10 hover:bg-emerald-800 transition-all"
-                >
-                    Daftar
-                </NuxtLink>
+                <template v-if="user">
+                    <Profile />
+                </template>
+                <template v-else>
+                    <NuxtLink
+                        to="/signin"
+                        id="nav-login"
+                        class="text-sm font-semibold text-emerald-syariah px-4 py-2 hover:bg-emerald-50 rounded-lg transition-all"
+                    >
+                        Masuk
+                    </NuxtLink>
+                    <NuxtLink
+                        to="/signup"
+                        id="nav-register"
+                        class="bg-emerald-syariah text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-lg shadow-emerald-900/10 hover:bg-emerald-800 transition-all"
+                    >
+                        Daftar
+                    </NuxtLink>
+                </template>
             </div>
         </div>
     </header>
 </template>
 
 <script setup lang="ts">
+import Profile from '@/components/Profile.vue'
+import { useAuthContext } from '@/lib/AuthContext'
+
 const route = useRoute()
+const { user } = useAuthContext()
 </script>
