@@ -17,7 +17,8 @@
               <div class="relative shrink-0">
                 <div
                   class="w-24 h-24 rounded-2xl border-2 border-gray-100 bg-gray-50 flex items-center justify-center overflow-hidden">
-                  <img v-if="form.photoURL" :src="form.photoURL" alt="Foto profil" class="w-full h-full object-cover" />
+                  <img v-if="form.photoURL && !photoLoadError" :src="form.photoURL" alt="Foto profil"
+                    class="w-full h-full object-cover" @error="photoLoadError = true" />
                   <Icon v-else name="lucide:user" class="text-4xl text-gray-300" />
                 </div>
                 <label
@@ -89,7 +90,7 @@
                 :class="profileErrors.areaDomisili ? 'border-red-300' : 'border-gray-100'" />
             </div>
             <p v-if="profileErrors.areaDomisili" class="text-xs text-red-500 font-medium">{{ profileErrors.areaDomisili
-            }}</p>
+              }}</p>
           </div>
           <div class="md:col-span-2 pt-4">
             <button type="submit"
@@ -323,6 +324,8 @@ const form = reactive({
   photoURL: '',
 })
 
+const photoLoadError = ref(false)
+
 watch(
   user,
   (u) => {
@@ -332,6 +335,7 @@ watch(
       form.phoneNumber = u.phoneNumber ?? ''
       form.areaDomisili = '' // not in Accounts; could load from Firestore preferences
       form.photoURL = u.photoURL ?? ''
+      photoLoadError.value = false
     }
   },
   { immediate: true },
@@ -378,8 +382,6 @@ const profileErrors = ref<Record<string, string>>({})
 const passwordErrors = ref<Record<string, string>>({})
 const uploadingPhoto = ref(false)
 
-const runtimeConfig = useRuntimeConfig()
-
 async function onPhotoChange(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -396,15 +398,23 @@ async function onPhotoChange(event: Event) {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const res = await $fetch<{ url: string }>(runtimeConfig.public.apiUrl as string, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'x-api-secret': runtimeConfig.public.apiSecret as string,
-      },
-    })
+    const res = await $fetch<{ url?: string; data?: { url?: string }; message?: string }>(
+      "http://localhost:3003/upload",
+      {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'x-api-secret': "d7d57910dc121fb5d9a0fa8865c4bc3da309cb6176e2e3216c6968f89180351b",
+        },
+      }
+    )
 
-    const photoURL = res.url
+    const photoURL = res.url ?? res.data?.url
+    if (!photoURL) {
+      profileErrors.value = { ...profileErrors.value, photoURL: 'URL foto tidak diterima dari server' }
+      return
+    }
+    photoLoadError.value = false
     form.photoURL = photoURL
 
     // Update Firestore accounts collection
