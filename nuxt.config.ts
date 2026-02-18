@@ -19,17 +19,6 @@ export default defineNuxtConfig({
     public: {
       apiSecret: "",
       apiUrl: "",
-      imgkitPublicKey: "",
-      imgkitPrivateKey: "",
-      imgkitUrlEndpoint: "",
-      firebaseApiKey: "",
-      firebaseAuthDomain: "",
-      firebaseDatabaseURL: "",
-      firebaseProjectId: "",
-      firebaseStorageBucket: "",
-      firebaseMessagingSenderId: "",
-      firebaseAppId: "",
-      firebaseMeasurementId: "",
     },
   },
   // @ts-ignore - extended by @nuxt/icon module at runtime
@@ -61,12 +50,12 @@ export default defineNuxtConfig({
         },
         plugins: (process.env.ANALYZE === "true"
           ? [
-              visualizer({
-                filename: "stats.html",
-                gzipSize: true,
-                brotliSize: true,
-              }),
-            ]
+            visualizer({
+              filename: "stats.html",
+              gzipSize: true,
+              brotliSize: true,
+            }),
+          ]
           : []) as any,
       },
     },

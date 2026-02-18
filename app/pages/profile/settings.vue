@@ -297,6 +297,7 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
 import { useAuthContext } from '@/lib/AuthContext'
 import {
   profileFormSchema,
@@ -305,13 +306,13 @@ import {
 } from '@/lib/validation'
 import UiInput from '@/components/ui/input/Input.vue'
 import UiLabel from '@/components/ui/label/Label.vue'
-import { doc, setDoc, Timestamp } from 'firebase/firestore'
-import { updateProfile } from 'firebase/auth'
-import { getFirebaseDb, getFirebaseAuth } from '@/lib/firebase'
+import { apiFetch, getApiSecret } from '@/lib/config'
 
 useHead({
   title: 'Pengaturan Akun | SyariahPro',
 })
+
+const apiSecret = getApiSecret()
 
 const auth = useAuthContext()
 const { user, signOut } = auth
@@ -398,16 +399,13 @@ async function onPhotoChange(event: Event) {
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const res = await $fetch<{ url?: string; data?: { url?: string }; message?: string }>(
-      "http://localhost:3003/upload",
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'x-api-secret': "d7d57910dc121fb5d9a0fa8865c4bc3da309cb6176e2e3216c6968f89180351b",
-        },
-      }
-    )
+    const res = await apiFetch<{ url?: string; data?: { url?: string }; message?: string }>('/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'x-api-secret': apiSecret,
+      },
+    })
 
     const photoURL = res.url ?? res.data?.url
     if (!photoURL) {
@@ -417,47 +415,44 @@ async function onPhotoChange(event: Event) {
     photoLoadError.value = false
     form.photoURL = photoURL
 
-    // Update Firestore accounts collection
-    const db = getFirebaseDb()
-    if (db) {
-      const accountsRef = doc(db, 'accounts', currentUser.id)
-      await setDoc(
-        accountsRef,
-        {
-          photoURL: photoURL ?? null,
-          updatedAt: Timestamp.now(),
-          uid: currentUser.id,
-        },
-        { merge: true }
-      )
-    }
-
-    // Update Firebase Auth user photoURL
-    const authInstance = getFirebaseAuth()
-    if (authInstance?.currentUser) {
-      await updateProfile(authInstance.currentUser, {
-        photoURL: photoURL,
-      })
-    }
+    // Persist via backend (session cookie)
+    await apiFetch("/me", {
+      method: 'PATCH',
+      body: { photoURL },
+    })
 
     // Update local user state
     if (user.value) {
       user.value.photoURL = photoURL
     }
   } catch (e: any) {
-    profileErrors.value = { ...profileErrors.value, photoURL: e?.data?.message ?? 'Gagal mengunggah foto' }
+    const msg = e?.data?.message ?? 'Gagal mengunggah foto'
+    profileErrors.value = { ...profileErrors.value, photoURL: msg }
+    toast.error(msg)
   } finally {
     uploadingPhoto.value = false
     input.value = ''
   }
 }
 
-function saveProfile() {
+async function saveProfile() {
   const result = profileFormSchema.safeParse(form)
   profileErrors.value = getFirstErrors(result)
   if (!result.success) return
-  // TODO: persist to Firestore accounts/{uid} (displayName, phoneNumber) and preferences (areaDomisili)
-  console.log('Save profile', result.data)
+
+  try {
+    await apiFetch('/me', {
+      method: 'PATCH',
+      body: {
+        displayName: result.data.displayName,
+        phoneNumber: result.data.phoneNumber,
+      },
+    })
+    toast.success('Profil berhasil disimpan')
+  } catch (e: any) {
+    const msg = e?.data?.message ?? 'Gagal menyimpan profil'
+    toast.error(msg)
+  }
 }
 
 function updatePassword() {

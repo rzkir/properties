@@ -68,35 +68,11 @@
                     </NuxtLink>
                 </div>
 
-                <!-- Submit -->
-                <div class="pt-1">
+            <!-- Submit -->
+            <div class="pt-1">
                     <UiButton id="btn-submit-login" type="submit" variant="default"
                         class="group relative w-full justify-center text-sm font-bold rounded-full bg-emerald-syariah hover:bg-emerald-800 shadow-lg shadow-emerald-900/20 hover:-translate-y-0.5 py-3.5">
                         Masuk Sekarang
-                    </UiButton>
-                </div>
-
-                <!-- Divider -->
-                <div class="relative my-6">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-100"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-white text-gray-400 font-medium">
-                            Atau masuk dengan
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Social -->
-                <div class="grid grid-cols-1 gap-3">
-                    <UiButton id="btn-google-login" type="button" variant="outline"
-                        class="w-full justify-center border-gray-200 rounded-2xl bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50 gap-3 h-11 disabled:opacity-70"
-                        :disabled="loading"
-                        @click="onGoogleSignIn">
-                        <Icon v-if="loading" name="lucide:loader-2" class="text-lg animate-spin" />
-                        <Icon v-else name="logos:google-icon" class="text-lg" />
-                        <span>{{ loading ? 'Memproses...' : 'Google' }}</span>
                     </UiButton>
                 </div>
             </form>
@@ -128,7 +104,6 @@ const {
     togglePassword,
     onSubmit,
     onForgotPassword,
-    onGoogleSignIn,
 } = useSignInState()
 
 useHead({

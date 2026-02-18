@@ -1,7 +1,5 @@
 import type { Ref } from 'vue';
 
-import type { Timestamp } from 'firebase/firestore';
-
 declare global {
   interface Accounts {
     id: string;
@@ -10,9 +8,9 @@ declare global {
     phoneNumber: string;
     photoURL?: string;
     role: 'admin' | 'user';
-    provider: 'email' | 'google';
-    createdAt: Timestamp;
-    updatedAt: Timestamp;
+    provider: 'email';
+    createdAt: Date | string | number | null;
+    updatedAt: Date | string | number | null;
   }
 
   interface AuthContext {
@@ -40,11 +38,6 @@ declare global {
      * Mengirim email reset password ke alamat email yang didaftarkan.
      */
     resetPassword(email: string): Promise<void>;
-
-    /**
-     * Masuk menggunakan akun Google.
-     */
-    signInWithGoogle(): Promise<void>;
 
     /**
      * Keluar dari sesi saat ini.
