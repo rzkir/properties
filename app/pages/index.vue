@@ -23,8 +23,9 @@
               dengan rumah idaman menggunakan skema akad halal dan transparan.
             </p>
             <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-              <a href="#" id="hero-explore-btn"
-                class="btn-gold px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-gold-500/20 w-full sm:w-auto text-center">
+              <a href="#filter-search" id="hero-explore-btn"
+                class="btn-gold px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-gold-500/20 w-full sm:w-auto text-center"
+                @click.prevent="scrollToFilter">
                 Mulai Mencari
               </a>
               <a href="#" id="hero-partner-btn"
@@ -58,7 +59,7 @@
     </section>
 
     <!-- Filter Search Bar (Overlapping) -->
-    <section class="relative -mt-10 md:-mt-16">
+    <section id="filter-search" class="relative -mt-10 md:-mt-16">
       <div class="container mx-auto px-4 md:px-6">
         <div
           class="bg-white rounded-3xl p-5 md:p-6 shadow-2xl flex flex-wrap lg:flex-nowrap items-stretch gap-4 md:gap-6">
@@ -91,6 +92,9 @@
                   <SelectValue placeholder="Pilih tipe hunian" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all">
+                    Semua Tipe
+                  </SelectItem>
                   <SelectItem value="Rumah Modern">
                     Rumah Modern
                   </SelectItem>
@@ -120,6 +124,9 @@
                   <SelectValue placeholder="Pilih range harga" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all">
+                    Semua Harga
+                  </SelectItem>
                   <SelectItem value="500-1000">
                     Rp 500Jt - 1M
                   </SelectItem>
@@ -139,18 +146,18 @@
               class="p-4 text-emerald-syariah hover:bg-emerald-50 rounded-2xl transition-all" title="Filter Lanjut">
               <Icon name="lucide:sliders-horizontal" class="text-xl" />
             </button>
-            <button id="btn-search-main"
+            <NuxtLink :to="searchRoute" id="btn-search-main"
               class="bg-[#D4AF37] text-white px-6 sm:px-10 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg shadow-xl shadow-gold-500/20 hover:scale-105 transition-all flex items-center justify-center gap-3 w-full md:w-auto">
               <Icon name="lucide:search" />
               Cari Sekarang
-            </button>
+            </NuxtLink>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Featured Properties Section -->
-    <section class="py-10 md:py-20 lg:py-24">
+    <section id="featured-properties" class="py-10 md:py-20 lg:py-24">
       <div class="container mx-auto px-4 md:px-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-10 md:mb-16">
           <div>
@@ -383,8 +390,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
 import { featuredProperties, advantages, testimonials } from '~/lib/data';
+import { useStateProperties } from '~/services/useStateProperties';
 import Input from '@/components/ui/input/Input.vue';
 import Select from '@/components/ui/select/Select.vue';
 import SelectTrigger from '@/components/ui/select/SelectTrigger.vue';
@@ -392,9 +399,5 @@ import SelectValue from '@/components/ui/select/SelectValue.vue';
 import SelectContent from '@/components/ui/select/SelectContent.vue';
 import SelectItem from '@/components/ui/select/SelectItem.vue';
 
-const filters = reactive({
-  location: '',
-  type: 'Rumah Modern',
-  price: '500-1000',
-});
+const { filters, searchRoute, scrollToFilter } = useStateProperties();
 </script>

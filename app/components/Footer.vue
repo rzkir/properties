@@ -61,19 +61,19 @@
           <h4 class="font-bold text-lg mb-6">Bantuan</h4>
           <ul class="space-y-4 text-emerald-100/60 text-sm">
             <li>
-              <a href="#" id="footer-link-skema" class="hover:text-[#D4AF37] transition-colors">
+              <NuxtLink to="/faqs#pembayaran" id="footer-link-skema" class="hover:text-[#D4AF37] transition-colors">
                 Skema Pembayaran
-              </a>
+              </NuxtLink>
             </li>
             <li>
-              <a href="#" id="footer-link-akad" class="hover:text-[#D4AF37] transition-colors">
+              <NuxtLink to="/faqs#akad" id="footer-link-akad" class="hover:text-[#D4AF37] transition-colors">
                 Info Akad
-              </a>
+              </NuxtLink>
             </li>
             <li>
-              <a href="#" id="footer-link-survey" class="hover:text-[#D4AF37] transition-colors">
+              <NuxtLink to="/faqs#survey" id="footer-link-survey" class="hover:text-[#D4AF37] transition-colors">
                 Panduan Survey
-              </a>
+              </NuxtLink>
             </li>
             <li>
               <a href="#" id="footer-link-contact" class="hover:text-[#D4AF37] transition-colors">

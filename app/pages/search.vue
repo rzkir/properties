@@ -5,45 +5,45 @@
             <div class="container mx-auto px-4 md:px-6">
                 <div class="bg-white rounded-2xl p-4 shadow-xl flex flex-wrap lg:flex-nowrap items-center gap-4">
                     <div class="flex-1 min-w-[200px] flex items-center gap-3 px-4 border-r border-gray-100">
-                        <iconify-icon icon="lucide:search" class="text-emerald-syariah text-xl"></iconify-icon>
+                        <Icon name="lucide:search" class="text-emerald-syariah text-xl" />
                         <div class="flex flex-col w-full">
                             <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                                 Cari
                             </label>
-                            <input type="text" placeholder="Nama perumahan atau area..."
+                            <input v-model="filters.location" type="text" placeholder="Nama perumahan atau area..."
                                 class="text-sm font-medium text-gray-800 focus:outline-none w-full" />
                         </div>
                     </div>
 
                     <div class="flex-1 min-w-[150px] flex items-center gap-3 px-4 border-r border-gray-100">
-                        <iconify-icon icon="lucide:map-pin" class="text-emerald-syariah text-xl"></iconify-icon>
+                        <Icon name="lucide:map-pin" class="text-emerald-syariah text-xl" />
                         <div class="flex flex-col w-full">
                             <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                                 Lokasi
                             </label>
-                            <select
+                            <select v-model="filters.location"
                                 class="text-sm font-medium text-gray-800 focus:outline-none bg-transparent cursor-pointer">
-                                <option>Semua Lokasi</option>
-                                <option>Jakarta Selatan</option>
-                                <option>Tangerang Selatan</option>
-                                <option>Bekasi</option>
-                                <option>Depok</option>
+                                <option value="">Semua Lokasi</option>
+                                <option value="Jakarta Selatan">Jakarta Selatan</option>
+                                <option value="Tangerang Selatan">Tangerang Selatan</option>
+                                <option value="Bekasi">Bekasi</option>
+                                <option value="Depok">Depok</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="flex-1 min-w-[150px] flex items-center gap-3 px-4 border-r border-gray-100">
-                        <iconify-icon icon="lucide:layout-grid" class="text-emerald-syariah text-xl"></iconify-icon>
+                        <Icon name="lucide:layout-grid" class="text-emerald-syariah text-xl" />
                         <div class="flex flex-col w-full">
                             <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                                 Tipe
                             </label>
-                            <select
+                            <select v-model="filters.type"
                                 class="text-sm font-medium text-gray-800 focus:outline-none bg-transparent cursor-pointer">
-                                <option>Semua Tipe</option>
-                                <option>Rumah</option>
-                                <option>Apartemen</option>
-                                <option>Kavling</option>
+                                <option value="all">Semua Tipe</option>
+                                <option value="Rumah Modern">Rumah</option>
+                                <option value="Apartemen Halal">Apartemen</option>
+                                <option value="Villa Tropis">Villa</option>
                             </select>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                     <div class="flex items-center gap-3">
                         <button id="btn-search-listing"
                             class="bg-[#D4AF37] text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-gold-500/20 hover:scale-105 transition-all flex items-center gap-2">
-                            <iconify-icon icon="lucide:filter"></iconify-icon>
+                            <Icon name="lucide:filter" />
                             Terapkan
                         </button>
                     </div>
@@ -185,7 +185,7 @@
                         <p class="text-gray-500 text-sm font-medium">
                             Ditemukan
                             <span class="text-emerald-syariah font-bold">
-                                {{ featuredProperties.length }} Properti
+                                {{ filteredProperties.length }} Properti
                             </span>
                             syariah
                         </p>
@@ -201,7 +201,11 @@
 
                     <!-- Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <article v-for="property in featuredProperties" :key="property.id"
+                        <p v-if="filteredProperties.length === 0" class="col-span-full text-center text-gray-500 py-12">
+                            Tidak ada properti yang sesuai kriteria. Coba ubah filter pencarian.
+                        </p>
+                        <template v-else>
+                            <article v-for="property in filteredProperties" :key="property.id"
                             class="bg-white rounded-4xl overflow-hidden border border-gray-100 shadow-soft group hover:-translate-y-2 transition-all duration-300">
                             <div class="relative aspect-4/3 overflow-hidden">
                                 <img :src="property.imageUrl" :alt="property.title"
@@ -218,16 +222,16 @@
                                 </div>
                                 <button
                                     class="absolute top-4 right-4 w-9 h-9 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-                                    <iconify-icon icon="lucide:heart" class="text-xl"></iconify-icon>
+                                    <Icon name="lucide:heart" class="text-xl" />
                                 </button>
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-1 text-[#D4AF37] mb-2">
-                                    <iconify-icon icon="material-symbols:star"></iconify-icon>
-                                    <iconify-icon icon="material-symbols:star"></iconify-icon>
-                                    <iconify-icon icon="material-symbols:star"></iconify-icon>
-                                    <iconify-icon icon="material-symbols:star"></iconify-icon>
-                                    <iconify-icon icon="material-symbols:star-half"></iconify-icon>
+                                    <Icon name="lucide:star" class="text-[#D4AF37]" />
+                                    <Icon name="lucide:star" class="text-[#D4AF37]" />
+                                    <Icon name="lucide:star" class="text-[#D4AF37]" />
+                                    <Icon name="lucide:star" class="text-[#D4AF37]" />
+                                    <Icon name="lucide:star-half" class="text-[#D4AF37]" />
                                     <span class="text-[11px] font-bold text-gray-400 ml-1">
                                         ({{ 24 + property.id * 6 }} Review)
                                     </span>
@@ -237,28 +241,28 @@
                                     {{ property.title }}
                                 </a>
                                 <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-4">
-                                    <iconify-icon icon="lucide:map-pin" class="text-[#D4AF37]"></iconify-icon>
+                                    <Icon name="lucide:map-pin" class="text-[#D4AF37]" />
                                     {{ property.location }}
                                 </div>
                                 <div class="flex items-center justify-between mb-5">
                                     <div class="flex items-center gap-4">
                                         <div class="flex flex-col items-center">
-                                            <iconify-icon icon="lucide:bed-double"
-                                                class="text-emerald-syariah mb-0.5"></iconify-icon>
+                                            <Icon name="lucide:bed-double"
+                                                class="text-emerald-syariah mb-0.5" />
                                             <span class="text-[10px] font-bold text-gray-500">
                                                 {{ property.bedrooms }}
                                             </span>
                                         </div>
                                         <div class="flex flex-col items-center">
-                                            <iconify-icon icon="lucide:bath"
-                                                class="text-emerald-syariah mb-0.5"></iconify-icon>
+                                            <Icon name="lucide:bath"
+                                                class="text-emerald-syariah mb-0.5" />
                                             <span class="text-[10px] font-bold text-gray-500">
                                                 {{ property.bathrooms }}
                                             </span>
                                         </div>
                                         <div class="flex flex-col items-center">
-                                            <iconify-icon icon="lucide:maximize"
-                                                class="text-emerald-syariah mb-0.5"></iconify-icon>
+                                            <Icon name="lucide:maximize"
+                                                class="text-emerald-syariah mb-0.5" />
                                             <span class="text-[10px] font-bold text-gray-500">
                                                 {{ property.area }}
                                             </span>
@@ -280,12 +284,13 @@
                                     </a>
                                     <a href="#"
                                         class="py-3 rounded-xl bg-emerald-syariah text-white text-center font-bold text-xs hover:bg-emerald-800 transition-all flex items-center justify-center gap-2">
-                                        <iconify-icon icon="lucide:message-circle" class="text-sm"></iconify-icon>
+                                        <Icon name="lucide:message-circle" class="text-sm" />
                                         Chat
                                     </a>
                                 </div>
                             </div>
-                        </article>
+                            </article>
+                        </template>
                     </div>
 
                     <!-- Pagination -->
@@ -293,7 +298,7 @@
                         <nav class="flex items-center gap-2">
                             <button
                                 class="w-10 h-10 flex items-center justify-center rounded-xl border border-gray-200 text-gray-400 hover:border-emerald-syariah hover:text-emerald-syariah transition-all">
-                                <iconify-icon icon="lucide:chevron-left"></iconify-icon>
+                                <Icon name="lucide:chevron-left" />
                             </button>
                             <button
                                 class="w-10 h-10 flex items-center justify-center rounded-xl bg-emerald-syariah text-white font-bold text-sm">
@@ -314,7 +319,7 @@
                             </button>
                             <button
                                 class="w-10 h-10 flex items-center justify-center rounded-xl border border-gray-200 text-gray-400 hover:border-emerald-syariah hover:text-emerald-syariah transition-all">
-                                <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                                <Icon name="lucide:chevron-right" />
                             </button>
                         </nav>
                     </div>
@@ -325,9 +330,15 @@
 </template>
 
 <script setup lang="ts">
-import { featuredProperties } from '~/lib/data';
+import { watch } from 'vue';
+import { useStateProperties } from '~/services/useStateProperties';
+
+const route = useRoute();
+const { filters, filteredProperties, syncFiltersFromRoute } = useStateProperties();
+
+watch(() => route.query, syncFiltersFromRoute, { immediate: true });
 
 useHead({
-    title: 'Cari Properti Syariah | SyariahPro'
+  title: 'Cari Properti Syariah | SyariahPro'
 });
 </script>

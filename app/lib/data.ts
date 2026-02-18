@@ -3,6 +3,7 @@ export const featuredProperties: FeaturedProperty[] = [
         id: 1,
         title: 'Griya Al-Fatih Residence',
         location: 'Ciputat, Tangerang Selatan',
+        type: 'Rumah Modern',
         imageUrl:
             'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=900',
         badges: [
@@ -12,12 +13,14 @@ export const featuredProperties: FeaturedProperty[] = [
         bedrooms: '3 KT',
         bathrooms: '2 KM',
         area: '90m²',
-        price: 'Rp 1,1 Milyar'
+        price: 'Rp 1,1 Milyar',
+        priceValue: 1100
     },
     {
         id: 2,
         title: 'Darussalam Hills',
         location: 'Cileungsi, Bogor',
+        type: 'Rumah Modern',
         imageUrl:
             'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=900',
         badges: [
@@ -27,12 +30,14 @@ export const featuredProperties: FeaturedProperty[] = [
         bedrooms: '2 KT',
         bathrooms: '1 KM',
         area: '72m²',
-        price: 'Rp 650 Juta'
+        price: 'Rp 650 Juta',
+        priceValue: 650
     },
     {
         id: 3,
         title: 'Nurul Jannah Residence',
         location: 'Bekasi Timur',
+        type: 'Apartemen Halal',
         imageUrl:
             'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=900',
         badges: [
@@ -42,12 +47,14 @@ export const featuredProperties: FeaturedProperty[] = [
         bedrooms: '3 KT',
         bathrooms: '2 KM',
         area: '84m²',
-        price: 'Rp 780 Juta'
+        price: 'Rp 780 Juta',
+        priceValue: 780
     },
     {
         id: 4,
         title: 'Al-Firdaus Valley',
         location: 'Sentul, Bogor',
+        type: 'Villa Tropis',
         imageUrl:
             'https://images.pexels.com/photos/439391/pexels-photo-439391.jpeg?auto=compress&cs=tinysrgb&w=900',
         badges: [
@@ -57,12 +64,14 @@ export const featuredProperties: FeaturedProperty[] = [
         bedrooms: '4 KT',
         bathrooms: '3 KM',
         area: '160m²',
-        price: 'Rp 2,3 Milyar'
+        price: 'Rp 2,3 Milyar',
+        priceValue: 2300
     },
     {
         id: 5,
         title: 'Baiti Jannati Residence',
         location: 'Depok, Jawa Barat',
+        type: 'Rumah Modern',
         imageUrl:
             'https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=900',
         badges: [
@@ -72,12 +81,14 @@ export const featuredProperties: FeaturedProperty[] = [
         bedrooms: '3 KT',
         bathrooms: '2 KM',
         area: '96m²',
-        price: 'Rp 980 Juta'
+        price: 'Rp 980 Juta',
+        priceValue: 980
     },
     {
         id: 6,
         title: 'Al-Hijrah Green Living',
         location: 'Bandung, Jawa Barat',
+        type: 'Villa Tropis',
         imageUrl:
             'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=900',
         badges: [
@@ -87,7 +98,8 @@ export const featuredProperties: FeaturedProperty[] = [
         bedrooms: '4 KT',
         bathrooms: '3 KM',
         area: '140m²',
-        price: 'Rp 1,7 Milyar'
+        price: 'Rp 1,7 Milyar',
+        priceValue: 1700
     }
 ];
 
