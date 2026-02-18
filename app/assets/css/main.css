@@ -148,6 +148,11 @@ h3,
   font-family: "Gambetta", ui-serif, Georgia, "Times New Roman", serif;
 }
 
+body::selection {
+  background-color: var(--emerald);
+  color: white;
+}
+
 .bg-emerald-syariah {
   background-color: var(--emerald);
 }

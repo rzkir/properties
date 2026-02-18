@@ -116,7 +116,11 @@ const columns: ColumnDef<TableData>[] = [
   {
     id: "select",
     header: ({ table }) => h(Checkbox, {
-      "modelValue": table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate"),
+      "modelValue": table.getIsAllPageRowsSelected()
+        ? true
+        : table.getIsSomePageRowsSelected()
+          ? ("indeterminate" as const)
+          : false,
       "onUpdate:modelValue": value => table.toggleAllPageRowsSelected(!!value),
       "aria-label": "Select all",
     }),
@@ -217,7 +221,7 @@ const columns: ColumnDef<TableData>[] = [
           }, {
             default: () => [
               h("span", { class: "sr-only" }, "Open menu"),
-              h(IconDotsVertical, { class: "h-4 w-4" }),
+              h(IconDotsVertical, { class: "h-4 w-4 text-foreground" }),
             ],
           }),
         }),
@@ -284,7 +288,7 @@ const sortableRowIds = computed(() =>
 <template>
   <Tabs
     default-value="outline"
-    class="w-full flex-col justify-start gap-6"
+    class="w-full flex-col justify-start gap-6 text-foreground [&_svg]:text-foreground"
   >
     <div class="flex items-center justify-between px-4 lg:px-6">
       <Label for="view-selector" class="sr-only">
@@ -334,11 +338,11 @@ const sortableRowIds = computed(() =>
       <div class="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button variant="outline" size="sm">
-              <IconLayoutColumns />
+            <Button variant="outline" size="sm" class="text-foreground">
+              <IconLayoutColumns class="size-4 shrink-0" />
               <span class="hidden lg:inline">Customize Columns</span>
               <span class="lg:hidden">Columns</span>
-              <IconChevronDown />
+              <IconChevronDown class="size-4 shrink-0" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-56">
@@ -356,8 +360,8 @@ const sortableRowIds = computed(() =>
             </template>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button variant="outline" size="sm">
-          <IconPlus />
+        <Button variant="outline" size="sm" class="text-foreground">
+          <IconPlus class="size-4 shrink-0" />
           <span class="hidden lg:inline">Add Section</span>
         </Button>
       </div>
@@ -435,42 +439,42 @@ const sortableRowIds = computed(() =>
           <div class="ml-auto flex items-center gap-2 lg:ml-0">
             <Button
               variant="outline"
-              class="hidden h-8 w-8 p-0 lg:flex"
+              class="hidden h-8 w-8 p-0 text-foreground lg:flex"
               :disabled="!table.getCanPreviousPage()"
               @click="table.setPageIndex(0)"
             >
               <span class="sr-only">Go to first page</span>
-              <IconChevronsLeft />
+              <IconChevronsLeft class="size-4 shrink-0" />
             </Button>
             <Button
               variant="outline"
-              class="size-8"
+              class="size-8 text-foreground"
               size="icon"
               :disabled="!table.getCanPreviousPage()"
               @click="table.previousPage()"
             >
               <span class="sr-only">Go to previous page</span>
-              <IconChevronLeft />
+              <IconChevronLeft class="size-4 shrink-0" />
             </Button>
             <Button
               variant="outline"
-              class="size-8"
+              class="size-8 text-foreground"
               size="icon"
               :disabled="!table.getCanNextPage()"
               @click="table.nextPage()"
             >
               <span class="sr-only">Go to next page</span>
-              <IconChevronRight />
+              <IconChevronRight class="size-4 shrink-0" />
             </Button>
             <Button
               variant="outline"
-              class="hidden size-8 lg:flex"
+              class="hidden size-8 text-foreground lg:flex"
               size="icon"
               :disabled="!table.getCanNextPage()"
               @click="table.setPageIndex(table.getPageCount() - 1)"
             >
               <span class="sr-only">Go to last page</span>
-              <IconChevronsRight />
+              <IconChevronsRight class="size-4 shrink-0" />
             </Button>
           </div>
         </div>

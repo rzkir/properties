@@ -1,44 +1,60 @@
 <script setup lang="ts">
-import {
-  IconCreditCard,
-  IconDotsVertical,
-  IconLogout,
-  IconNotification,
-  IconUserCircle,
-} from "@tabler/icons-vue"
+import { computed } from "vue";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar'
+import { IconDotsVertical, IconLogout } from "@tabler/icons-vue";
+
+import { toast } from "vue-sonner";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
+
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar'
+} from "@/components/ui/sidebar";
 
-interface User {
-  name: string
-  email: string
-  avatar: string
-}
+import { useAuthContext } from "@/services/useStateAuth";
 
-defineProps<{
-  user: User
-}>()
+const { isMobile } = useSidebar();
+const auth = useAuthContext();
+const { user, signOut } = auth;
 
-const { isMobile } = useSidebar()
+const currentUser = computed(() => {
+  const u = user.value;
+  if (!u) {
+    return {
+      name: "Guest",
+      email: "-",
+      avatar: "",
+    };
+  }
+  return {
+    name: u.displayName ?? "User",
+    email: u.email ?? "-",
+    avatar: u.photoURL ?? "",
+  };
+});
+
+const router = useRouter();
+
+const onLogout = async () => {
+  try {
+    await signOut();
+    await router.push("/signin");
+  } catch {
+    toast.error("Gagal keluar. Silakan coba lagi.");
+  }
+};
 </script>
 
 <template>
@@ -51,15 +67,13 @@ const { isMobile } = useSidebar()
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg grayscale">
-              <AvatarImage :src="user.avatar" :alt="user.name" />
-              <AvatarFallback class="rounded-lg">
-                CN
-              </AvatarFallback>
+              <AvatarImage :src="currentUser.avatar" :alt="currentUser.name" />
+              <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">{{ user.name }}</span>
+              <span class="truncate font-medium">{{ currentUser.name }}</span>
               <span class="text-muted-foreground truncate text-xs">
-                {{ user.email }}
+                {{ currentUser.email }}
               </span>
             </div>
             <IconDotsVertical class="ml-auto size-4" />
@@ -74,36 +88,24 @@ const { isMobile } = useSidebar()
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg">
-                  CN
-                </AvatarFallback>
+                <AvatarImage
+                  :src="currentUser.avatar"
+                  :alt="currentUser.name"
+                />
+                <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-medium">{{ user.name }}</span>
+                <span class="truncate font-medium">{{ currentUser.name }}</span>
                 <span class="text-muted-foreground truncate text-xs">
-                  {{ user.email }}
+                  {{ currentUser.email }}
                 </span>
               </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <IconUserCircle />
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IconCreditCard />
-              Billing
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IconNotification />
-              Notifications
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click="onLogout">
             <IconLogout />
             Log out
           </DropdownMenuItem>

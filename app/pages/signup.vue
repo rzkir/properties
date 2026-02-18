@@ -79,9 +79,15 @@
                                     class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                     <Icon name="lucide:lock" class="text-xl" />
                                 </div>
-                                <UiInput id="password" v-model="password" type="password" autocomplete="new-password"
-                                    required placeholder="••••••••"
-                                    class="pl-11 h-12 rounded-2xl bg-gray-50 border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 focus-visible:ring-emerald-800/20 focus-visible:border-emerald-syariah" />
+                                <UiInput id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
+                                    autocomplete="new-password" required placeholder="••••••••"
+                                    class="pl-11 pr-11 h-12 rounded-2xl bg-gray-50 border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 focus-visible:ring-emerald-800/20 focus-visible:border-emerald-syariah" />
+                                <button type="button"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                    :aria-label="showPassword ? 'Sembunyikan sandi' : 'Tampilkan sandi'"
+                                    @click="showPassword = !showPassword">
+                                    <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" class="text-xl" />
+                                </button>
                             </div>
                         </div>
 
@@ -95,9 +101,17 @@
                                     class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                     <Icon name="lucide:lock" class="text-xl" />
                                 </div>
-                                <UiInput id="confirm-password" v-model="confirmPassword" type="password"
+                                <UiInput id="confirm-password" v-model="confirmPassword"
+                                    :type="showConfirmPassword ? 'text' : 'password'"
                                     autocomplete="new-password" required placeholder="••••••••"
-                                    class="pl-11 h-12 rounded-2xl bg-gray-50 border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 focus-visible:ring-emerald-800/20 focus-visible:border-emerald-syariah" />
+                                    class="pl-11 pr-11 h-12 rounded-2xl bg-gray-50 border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 focus-visible:ring-emerald-800/20 focus-visible:border-emerald-syariah" />
+                                <button type="button"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                    :aria-label="showConfirmPassword ? 'Sembunyikan sandi' : 'Tampilkan sandi'"
+                                    @click="showConfirmPassword = !showConfirmPassword">
+                                    <Icon :name="showConfirmPassword ? 'lucide:eye-off' : 'lucide:eye'"
+                                        class="text-xl" />
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -167,6 +181,9 @@ import UiInput from '@/components/ui/input/Input.vue'
 import UiButton from '@/components/ui/button/Button.vue'
 import UiLabel from '@/components/ui/label/Label.vue'
 import { useSignUpState } from '@/services/useStateAuth'
+
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 
 const {
     name,

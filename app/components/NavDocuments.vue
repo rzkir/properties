@@ -44,8 +44,8 @@ const { isMobile } = useSidebar()
     <SidebarMenu>
       <SidebarMenuItem v-for="item in items" :key="item.name">
         <SidebarMenuButton as-child>
-          <a :href="item.url">
-            <component :is="item.icon" />
+          <a :href="item.url" class="text-sidebar-foreground">
+            <component :is="item.icon" class="size-4 shrink-0 text-sidebar-foreground" />
             <span>{{ item.name }}</span>
           </a>
         </SidebarMenuButton>

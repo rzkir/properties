@@ -14,7 +14,10 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   css: ["./app/assets/css/main.css", "vue-sonner/style.css"],
-  modules: ["shadcn-nuxt", "@nuxt/icon"],
+  modules: ["shadcn-nuxt", "@nuxt/icon", "@nuxtjs/color-mode"],
+  colorMode: {
+    classSuffix: "",
+  },
   runtimeConfig: {
     public: {
       apiSecret: "",

@@ -1,25 +1,23 @@
 <script setup lang="ts">
 import {
-  IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
+  IconMapPin,
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
-  IconReport,
+  IconBuilding,
   IconSearch,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-vue"
+  IconBadge,
+} from "@tabler/icons-vue";
 
-import NavDocuments from '@/components/NavDocuments.vue'
-import NavMain from '@/components/NavMain.vue'
-import NavSecondary from '@/components/NavSecondary.vue'
-import NavUser from '@/components/NavUser.vue'
+import NavDocuments from "@/components/NavDocuments.vue";
+import NavMain from "@/components/NavMain.vue";
+import NavSecondary from "@/components/NavSecondary.vue";
+import NavUser from "@/components/NavUser.vue";
 import {
   Sidebar,
   SidebarContent,
@@ -28,7 +26,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from "@/components/ui/sidebar";
 
 const data = {
   user: {
@@ -39,7 +37,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
@@ -63,52 +61,26 @@ const data = {
       icon: IconUsers,
     },
   ],
-  navClouds: [
+  documents: [
     {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      name: "Properties",
+      url: "/dashboard/properties",
+      icon: IconFolder,
     },
     {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      name: "Property Types",
+      url: "/dashboard/types",
+      icon: IconBuilding,
     },
     {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      name: "Property Badges",
+      url: "/dashboard/badges",
+      icon: IconBadge,
+    },
+    {
+      name: "Property Locations",
+      url: "/dashboard/locations",
+      icon: IconMapPin,
     },
   ],
   navSecondary: [
@@ -128,24 +100,7 @@ const data = {
       icon: IconSearch,
     },
   ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileDescription,
-    },
-  ],
-}
+};
 </script>
 
 <template>
@@ -153,7 +108,10 @@ const data = {
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton as-child class="data-[slot=sidebar-menu-button]:p-1.5!">
+          <SidebarMenuButton
+            as-child
+            class="data-[slot=sidebar-menu-button]:p-1.5!"
+          >
             <a href="#">
               <IconInnerShadowTop class="size-5!" />
               <span class="text-base font-semibold">Acme Inc.</span>
@@ -168,7 +126,7 @@ const data = {
       <NavSecondary :items="data.navSecondary" class="mt-auto" />
     </SidebarContent>
     <SidebarFooter>
-      <NavUser :user="data.user" />
+      <NavUser />
     </SidebarFooter>
   </Sidebar>
 </template>
