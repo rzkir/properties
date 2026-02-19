@@ -269,6 +269,112 @@ export function useLocationsState() {
   };
 }
 
+// ------------------------- Badges (dashboard) ------------------------- //
+const badgesCrud = useCrudService<PropertyBadge>({
+  endpoint: '/properties-badge',
+  defaultForm: {
+    name: '',
+    badgesId: '',
+    isActive: true,
+  },
+  validate: (form) => {
+    const errors: Record<string, string> = {};
+    if (!form.name?.toString().trim()) {
+      errors.name = 'Nama wajib diisi';
+    } else if (form.name.toString().length > 100) {
+      errors.name = 'Nama maksimal 100 karakter';
+    }
+    return errors;
+  },
+  transformForm: (form) => ({
+    name: form.name?.toString().trim(),
+    badgesId: form.badgesId?.toString().trim() || undefined,
+    isActive: form.isActive,
+  }),
+  autoGenerate: {
+    badgesId: {
+      from: 'name',
+      generator: generatePropertiesId,
+      onlyOnCreate: true,
+    },
+  },
+  messages: {
+    fetch: 'Gagal memuat data badges',
+    create: 'Badge berhasil ditambahkan',
+    update: 'Badge berhasil diperbarui',
+    delete: 'Badge berhasil dihapus',
+    fetchError: 'Gagal memuat data badges',
+    createError: 'Gagal menambahkan badge',
+    updateError: 'Gagal memperbarui badge',
+    deleteError: 'Gagal menghapus badge',
+  },
+  deleteConfirmMessage: (item) => `Apakah Anda yakin ingin menghapus "${item.name}"?`,
+});
+
+const badgesDeleteModalOpen = ref(false);
+const badgesDeleteTarget = ref<PropertyBadge | null>(null);
+const badgesDeleting = ref(false);
+
+const badgesActiveCount = computed(() =>
+  badgesCrud.items.value.filter((item) => item.isActive).length,
+);
+const badgesInactiveCount = computed(() =>
+  badgesCrud.items.value.filter((item) => !item.isActive).length,
+);
+
+function openBadgesDeleteModal(item: PropertyBadge) {
+  badgesDeleteTarget.value = item;
+  badgesDeleteModalOpen.value = true;
+}
+
+function closeBadgesDeleteModal() {
+  if (!badgesDeleting.value) {
+    badgesDeleteModalOpen.value = false;
+    badgesDeleteTarget.value = null;
+  }
+}
+
+async function handleBadgesConfirmDelete() {
+  if (!badgesDeleteTarget.value) return;
+  badgesDeleting.value = true;
+  try {
+    await badgesCrud.performDelete(badgesDeleteTarget.value);
+    badgesDeleteModalOpen.value = false;
+    badgesDeleteTarget.value = null;
+  } finally {
+    badgesDeleting.value = false;
+  }
+}
+
+export function useBadgesState() {
+  return {
+    // CRUD
+    badges: badgesCrud.items,
+    loading: badgesCrud.loading,
+    isDialogOpen: badgesCrud.isDialogOpen,
+    editingItem: badgesCrud.editingItem,
+    submitting: badgesCrud.submitting,
+    form: badgesCrud.form,
+    errors: badgesCrud.errors,
+    fetchBadges: badgesCrud.fetch,
+    openCreateDialog: badgesCrud.openCreateDialog,
+    openEditDialog: badgesCrud.openEditDialog,
+    closeDialog: badgesCrud.closeDialog,
+    handleSubmit: badgesCrud.handleSubmit,
+    performDelete: badgesCrud.performDelete,
+    // Delete modal
+    isDeleteModalOpen: badgesDeleteModalOpen,
+    deleteTarget: badgesDeleteTarget,
+    deleting: badgesDeleting,
+    openDeleteModal: openBadgesDeleteModal,
+    closeDeleteModal: closeBadgesDeleteModal,
+    handleConfirmDelete: handleBadgesConfirmDelete,
+    // Stats
+    activeCount: badgesActiveCount,
+    inactiveCount: badgesInactiveCount,
+  };
+}
+
 export function useStateProperties() {
   return {
     filters,
