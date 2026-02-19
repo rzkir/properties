@@ -27,6 +27,10 @@ async function fetchMeFromBackend(): Promise<Accounts | null> {
   const base = getApiBaseUrl();
   if (!base) return null;
   try {
+    // Debug: Check if cookie exists before request
+    const cookies = document.cookie;
+    console.log("[FE] Cookies before /auth/me:", cookies);
+
     const res = await apiFetch<{ data: BackendMe }>("/auth/me", { method: "GET" });
     const role = res.data.role === Role.ADMIN ? Role.ADMIN : Role.USER;
     return {
@@ -42,6 +46,8 @@ async function fetchMeFromBackend(): Promise<Accounts | null> {
     };
   } catch (e: any) {
     console.error("[FE] /auth/me error:", e, e?.data);
+    console.error("[FE] Error status:", e?.status);
+    console.error("[FE] Error response:", e?.data);
     if (e?.status === 401) return null;
     throw e;
   }
@@ -79,7 +85,16 @@ export function useAuthContext(): AuthContext {
         method: "POST",
         body: { email: normalizedEmail, password: normalizedPassword },
       });
-      user.value = await fetchMeFromBackend();
+      // Wait a bit for cookie to be set in browser
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Retry fetchMeFromBackend up to 3 times with delay
+      let me: Accounts | null = null;
+      for (let i = 0; i < 3; i++) {
+        me = await fetchMeFromBackend();
+        if (me) break;
+        if (i < 2) await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+      user.value = me;
     } catch (err: unknown) {
       // eslint-disable-next-line no-console
       console.error("[FE] signIn error:", err, (err as any)?.data);
@@ -117,7 +132,16 @@ export function useAuthContext(): AuthContext {
         method: "POST",
         body: payload,
       });
-      user.value = await fetchMeFromBackend();
+      // Wait a bit for cookie to be set in browser
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Retry fetchMeFromBackend up to 3 times with delay
+      let me: Accounts | null = null;
+      for (let i = 0; i < 3; i++) {
+        me = await fetchMeFromBackend();
+        if (me) break;
+        if (i < 2) await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+      user.value = me;
     } catch (err: unknown) {
       const anyErr = err as any;
       error.value =
@@ -152,10 +176,14 @@ export function useAuthContext(): AuthContext {
     error.value = null;
     try {
       await apiFetch("/auth/logout", { method: "POST" });
+
+      toast.success("Anda berhasil keluar.");
+
       user.value = null;
     } catch (err: unknown) {
       error.value =
         (err as { message?: string })?.message ?? "Gagal keluar.";
+      toast.error(error.value);
       throw err;
     } finally {
       loading.value = false;
@@ -438,11 +466,33 @@ export function useSignInState() {
     showPassword.value = !showPassword.value;
   };
 
+  const redirectIfAuthenticated = () => {
+    if (!user.value) return;
+    const role = user.value.role;
+    const targetPath = role === Role.ADMIN ? "/dashboard" : "/";
+    router.replace(targetPath);
+  };
+
+  watch(
+    user,
+    () => {
+      redirectIfAuthenticated();
+    },
+    { immediate: true },
+  );
+
   const onSubmit = async () => {
     try {
       await signIn(email.value, password.value);
+
       const role = user.value?.role;
       const targetPath = role === Role.ADMIN ? "/dashboard" : "/";
+
+      // Toast selamat datang
+      toast.success(
+        `Selamat datang${user.value?.displayName ? ", " + user.value.displayName : ""}!`
+      );
+
       router.push(targetPath);
     } catch {
       toast.error(error.value || "Gagal masuk. Silakan coba lagi.");
@@ -479,7 +529,7 @@ export function useSignInState() {
  */
 export function useSignUpState() {
   const router = useRouter();
-  const { signUp, loading, error } = useAuthContext();
+  const { signUp, loading, error, user } = useAuthContext();
 
   const name = ref("");
   const email = ref("");
@@ -487,6 +537,21 @@ export function useSignUpState() {
   const password = ref("");
   const confirmPassword = ref("");
   const agreeTerms = ref(false);
+
+  const redirectIfAuthenticated = () => {
+    if (!user.value) return;
+    const role = user.value.role;
+    const targetPath = role === Role.ADMIN ? "/dashboard" : "/";
+    router.replace(targetPath);
+  };
+
+  watch(
+    user,
+    () => {
+      redirectIfAuthenticated();
+    },
+    { immediate: true },
+  );
 
   const onSubmit = async () => {
     if (password.value !== confirmPassword.value) {

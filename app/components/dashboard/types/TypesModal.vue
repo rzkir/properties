@@ -32,18 +32,18 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="propertiesId" class="text-sm font-medium text-foreground">
-            Properties ID
+          <Label for="propertiesTypeId" class="text-sm font-medium text-foreground">
+            Properties Type ID
           </Label>
           <Input
-            id="propertiesId"
-            v-model="form.propertiesId"
+            id="propertiesTypeId"
+            v-model="form.propertiesTypeId"
             placeholder="Akan terisi otomatis dari nama"
             readonly
             class="h-10 bg-muted font-mono text-sm cursor-not-allowed text-muted-foreground"
           />
-          <p v-if="errors.propertiesId" class="text-xs text-destructive mt-1.5">
-            {{ errors.propertiesId }}
+          <p v-if="errors.propertiesTypeId" class="text-xs text-destructive mt-1.5">
+            {{ errors.propertiesTypeId }}
           </p>
         </div>
 
@@ -108,7 +108,7 @@ interface Props {
   modelValue: boolean;
   form: {
     name: string;
-    propertiesId?: string;
+    propertiesTypeId?: string;
     isActive: boolean;
   };
   errors: Record<string, string>;

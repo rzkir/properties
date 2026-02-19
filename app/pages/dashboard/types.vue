@@ -36,7 +36,7 @@
             <TableRow class="bg-muted/50 hover:bg-muted/50">
               <TableHead class="font-semibold text-foreground">Nama</TableHead>
               <TableHead class="font-semibold text-foreground"
-                >Properties ID</TableHead
+                >Properties Type ID</TableHead
               >
               <TableHead class="font-semibold text-foreground"
                 >Status</TableHead
@@ -95,7 +95,7 @@
                 item.name
               }}</TableCell>
               <TableCell class="text-muted-foreground font-mono text-sm">{{
-                item.propertiesId || "-"
+                item.propertiesTypeId || "-"
               }}</TableCell>
               <TableCell>
                 <Badge
