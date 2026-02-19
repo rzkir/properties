@@ -48,6 +48,8 @@ export interface CrudState<T extends Record<string, any>> {
   closeDialog: () => void;
   handleSubmit: () => Promise<void>;
   confirmDelete: (item: T) => Promise<void>;
+  /** Perform delete without confirmation (e.g. after custom modal confirm) */
+  performDelete: (item: T) => Promise<void>;
   resetForm: () => void;
 }
 
@@ -214,16 +216,8 @@ export function useCrudService<T extends Record<string, any> & { id: string }>(
     }
   }
 
-  // Confirm and delete item
-  async function confirmDelete(item: T) {
-    const confirmMessage = config.deleteConfirmMessage
-      ? config.deleteConfirmMessage(item)
-      : `Apakah Anda yakin ingin menghapus item ini?`;
-
-    if (!confirm(confirmMessage)) {
-      return;
-    }
-
+  // Perform delete (no confirmation) - use with custom modal
+  async function performDelete(item: T) {
     try {
       await apiFetch(`${config.endpoint}/${item.id}`, {
         method: "DELETE",
@@ -235,6 +229,19 @@ export function useCrudService<T extends Record<string, any> & { id: string }>(
       const message = error?.data?.message || messages.deleteError;
       toast.error(message);
     }
+  }
+
+  // Confirm and delete item (uses browser confirm; use performDelete + custom modal for modal UX)
+  async function confirmDelete(item: T) {
+    const confirmMessage = config.deleteConfirmMessage
+      ? config.deleteConfirmMessage(item)
+      : `Apakah Anda yakin ingin menghapus item ini?`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    await performDelete(item);
   }
 
   return {
@@ -251,6 +258,7 @@ export function useCrudService<T extends Record<string, any> & { id: string }>(
     closeDialog,
     handleSubmit,
     confirmDelete,
+    performDelete,
     resetForm,
   };
 }
