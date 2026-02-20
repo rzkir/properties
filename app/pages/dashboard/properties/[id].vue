@@ -489,28 +489,32 @@
 
           <!-- Add Image Action Select -->
           <div class="space-y-2">
-            <Select
-              :model-value="imageAction"
-              @update:model-value="handleImageActionChange"
-            >
-              <SelectTrigger class="w-full h-10">
-                <SelectValue placeholder="Pilih cara menambah gambar" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="url">
-                  <div class="flex items-center gap-2">
-                    <Icon name="lucide:link" class="h-4 w-4" />
-                    <span>Tambah URL</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="upload">
-                  <div class="flex items-center gap-2">
-                    <Icon name="lucide:upload" class="h-4 w-4" />
-                    <span>Upload File</span>
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                class="w-fit h-10"
+                @click="handleImageActionChange('url')"
+              >
+                <Icon name="lucide:link" class="mr-2 h-4 w-4" />
+                Tambah URL
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                class="w-fit h-10"
+                :disabled="uploadingImage"
+                @click="handleImageActionChange('upload')"
+              >
+                <Icon
+                  v-if="uploadingImage"
+                  name="lucide:loader-2"
+                  class="mr-2 h-4 w-4 animate-spin"
+                />
+                <Icon v-else name="lucide:upload" class="mr-2 h-4 w-4" />
+                Upload File
+              </Button>
+            </div>
 
             <!-- URL Input Fields (shown when action is url) -->
             <div v-if="imageAction === 'url'" class="space-y-2">
@@ -644,7 +648,10 @@ const {
   locations,
   badges,
   displayAuthor,
+  thumbnailInput,
+  imageInput,
   uploadingThumbnail,
+  uploadingImage,
   imageUrlInputs,
   imageAction,
   imageUrls,

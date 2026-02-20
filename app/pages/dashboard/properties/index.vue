@@ -9,7 +9,10 @@
       :loading="loading"
     >
       <template #actions>
-        <NuxtLink to="/dashboard/properties/new" class="inline-flex w-full lg:w-auto">
+        <NuxtLink
+          :to="{ name: 'dashboard-properties-id', params: { id: 'new' } }"
+          class="inline-flex w-full lg:w-auto"
+        >
           <Button class="w-full lg:w-auto" as="span">
             <Icon name="lucide:plus" class="mr-2 h-4 w-4" />
             Tambah Property

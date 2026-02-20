@@ -558,7 +558,7 @@ export function usePropertyFormState() {
         displayName: u.displayName ?? '',
         email: u.email ?? '',
         phoneNumber: u.phoneNumber ?? '',
-        photoURL: u.photoURL,
+        photoURL: u.photoURL ?? '',
       };
     }
     return null;
@@ -631,10 +631,31 @@ export function usePropertyFormState() {
 
   // Functions for image URL inputs
   function addImageUrlInput() {
-    imageUrlInputs.value.push({
-      id: imageUrlInputIdCounter++,
-      value: '',
+    // Commit current input values as images without creating new rows
+    imageUrlInputs.value.forEach((input) => {
+      const url = input.value.trim();
+      if (!url) return;
+
+      if (!Array.isArray(form.imageUrl)) {
+        form.imageUrl = [];
+      }
+      if (!form.imageUrl.includes(url)) {
+        form.imageUrl.push(url);
+      }
     });
+
+    // Clear inputs but keep existing row(s) so the UI doesn't grow vertically
+    imageUrlInputs.value.forEach((input) => {
+      input.value = '';
+    });
+
+    // Ensure at least one empty input exists
+    if (imageUrlInputs.value.length === 0) {
+      imageUrlInputs.value.push({
+        id: imageUrlInputIdCounter++,
+        value: '',
+      });
+    }
   }
 
   function removeImageUrlInput(index: number) {
@@ -662,17 +683,8 @@ export function usePropertyFormState() {
       if (!form.imageUrl.includes(url)) {
         form.imageUrl.push(url);
       }
-      // Clear the input
+      // Clear the input but do NOT create additional rows
       input.value = '';
-
-      // Ensure at least one empty input exists
-      const hasEmptyInput = imageUrlInputs.value.some((inp) => !inp.value.trim());
-      if (!hasEmptyInput) {
-        imageUrlInputs.value.push({
-          id: imageUrlInputIdCounter++,
-          value: '',
-        });
-      }
     }
   }
 
@@ -869,11 +881,11 @@ export function usePropertyFormState() {
       const u = user.value;
       form.author = u
         ? {
-            displayName: u.displayName ?? '',
-            email: u.email ?? '',
-            phoneNumber: u.phoneNumber ?? '',
-            photoURL: u.photoURL,
-          }
+          displayName: u.displayName ?? '',
+          email: u.email ?? '',
+          phoneNumber: u.phoneNumber ?? '',
+          photoURL: u.photoURL ?? '',
+        }
         : null;
     } else if (isEdit.value && propertyId.value) {
       try {
@@ -943,11 +955,11 @@ export function usePropertyFormState() {
           const u = user.value;
           form.author = u
             ? {
-                displayName: u.displayName ?? '',
-                email: u.email ?? '',
-                phoneNumber: u.phoneNumber ?? '',
-                photoURL: u.photoURL,
-              }
+              displayName: u.displayName ?? '',
+              email: u.email ?? '',
+              phoneNumber: u.phoneNumber ?? '',
+              photoURL: u.photoURL,
+            }
             : null;
         }
       } catch (error: any) {
@@ -1025,11 +1037,11 @@ export function usePropertyFormState() {
           ? form.author
           : user.value
             ? {
-                displayName: user.value.displayName ?? '',
-                email: user.value.email ?? '',
-                phoneNumber: user.value.phoneNumber ?? '',
-                photoURL: user.value.photoURL,
-              }
+              displayName: user.value.displayName ?? '',
+              email: user.value.email ?? '',
+              phoneNumber: user.value.phoneNumber ?? '',
+              photoURL: user.value.photoURL ?? '',
+            }
             : null;
 
       // Prepare payload
