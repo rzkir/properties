@@ -544,24 +544,42 @@ export function usePropertyFormState() {
   const { badges, fetchBadges } = useBadgesState();
   const { user } = useAuthContext();
 
+  function normalizeAuthor(
+    sourceAuthor: Author | null | undefined,
+    fallbackUser: any,
+  ): Author | null {
+    if (!sourceAuthor && !fallbackUser) {
+      return null;
+    }
+
+    const authorPhone =
+      (sourceAuthor?.phoneNumber &&
+        sourceAuthor.phoneNumber.toString().trim()) ||
+      (fallbackUser?.phoneNumber &&
+        fallbackUser.phoneNumber.toString().trim()) ||
+      '';
+
+    return {
+      displayName:
+        sourceAuthor?.displayName ??
+        fallbackUser?.displayName ??
+        '',
+      email: sourceAuthor?.email ?? fallbackUser?.email ?? '',
+      phoneNumber: authorPhone,
+      photoURL: sourceAuthor?.photoURL ?? fallbackUser?.photoURL ?? '',
+    };
+  }
+
   const isEdit = computed(() => route.params.id !== 'new');
   const propertyId = computed(() => (route.params.id as string) || '');
 
   // Author: edit mode = dari property, create mode = dari user login
   const displayAuthor = computed((): Author | null => {
-    if (isEdit.value && form.author && typeof form.author === 'object') {
-      return form.author as Author;
-    }
     const u = user.value;
-    if (u) {
-      return {
-        displayName: u.displayName ?? '',
-        email: u.email ?? '',
-        phoneNumber: u.phoneNumber ?? '',
-        photoURL: u.photoURL ?? '',
-      };
+    if (isEdit.value && form.author && typeof form.author === 'object') {
+      return normalizeAuthor(form.author as Author, u);
     }
-    return null;
+    return normalizeAuthor(null, u);
   });
 
   // Image upload refs
@@ -878,15 +896,7 @@ export function usePropertyFormState() {
       imageUrlInputs.value = [];
       imageAction.value = '';
       // Set author from logged-in user
-      const u = user.value;
-      form.author = u
-        ? {
-          displayName: u.displayName ?? '',
-          email: u.email ?? '',
-          phoneNumber: u.phoneNumber ?? '',
-          photoURL: u.photoURL ?? '',
-        }
-        : null;
+      form.author = normalizeAuthor(null, user.value);
     } else if (isEdit.value && propertyId.value) {
       try {
         const response = await apiFetch<{ data: Property }>(
@@ -950,17 +960,9 @@ export function usePropertyFormState() {
 
         // Set author from property or fallback to logged-in user
         if (property.author && typeof property.author === 'object') {
-          form.author = { ...property.author };
+          form.author = normalizeAuthor(property.author as Author, user.value);
         } else {
-          const u = user.value;
-          form.author = u
-            ? {
-              displayName: u.displayName ?? '',
-              email: u.email ?? '',
-              phoneNumber: u.phoneNumber ?? '',
-              photoURL: u.photoURL,
-            }
-            : null;
+          form.author = normalizeAuthor(null, user.value);
         }
       } catch (error: any) {
         console.error('[FE] Fetch property error:', error);
@@ -1031,18 +1033,11 @@ export function usePropertyFormState() {
 
     submitting.value = true;
     try {
-      // Build author from form or logged-in user
+      // Build author from form atau logged-in user, dengan fallback phoneNumber
       const authorPayload =
         form.author && typeof form.author === 'object'
-          ? form.author
-          : user.value
-            ? {
-              displayName: user.value.displayName ?? '',
-              email: user.value.email ?? '',
-              phoneNumber: user.value.phoneNumber ?? '',
-              photoURL: user.value.photoURL ?? '',
-            }
-            : null;
+          ? normalizeAuthor(form.author as Author, user.value)
+          : normalizeAuthor(null, user.value);
 
       // Prepare payload
       const payload = {

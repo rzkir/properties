@@ -21,136 +21,150 @@
       </template>
     </SectionHeader>
 
-    <!-- Table Card -->
-    <div class="rounded-lg border bg-card shadow-sm">
-      <div class="overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow class="bg-muted/50 hover:bg-muted/50">
-              <TableHead class="font-semibold text-foreground">Judul</TableHead>
-              <TableHead class="font-semibold text-foreground">Lokasi</TableHead>
-              <TableHead class="font-semibold text-foreground">Tipe</TableHead>
-              <TableHead class="font-semibold text-foreground">Harga</TableHead>
-              <TableHead class="font-semibold text-foreground">Kamar</TableHead>
-              <TableHead class="text-right font-semibold text-foreground">Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <template v-if="loading">
-              <TableRow v-for="i in 4" :key="i" class="hover:bg-transparent">
-                <TableCell>
-                  <Skeleton class="h-5 w-48" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton class="h-5 w-32" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton class="h-5 w-24" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton class="h-5 w-32" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton class="h-5 w-20" />
-                </TableCell>
-                <TableCell class="text-right">
-                  <div class="flex items-center justify-end gap-1">
-                    <Skeleton class="h-8 w-8 rounded-md" />
-                    <Skeleton class="h-8 w-8 rounded-md" />
-                  </div>
-                </TableCell>
-              </TableRow>
-            </template>
-            <TableRow
-              v-else-if="properties.length === 0"
-              class="hover:bg-transparent"
-            >
-              <TableCell colspan="6" class="text-center py-12">
-                <div class="flex flex-col items-center justify-center gap-2">
-                  <Icon
-                    name="lucide:inbox"
-                    class="h-10 w-10 text-muted-foreground/50"
-                  />
-                  <p class="text-sm font-medium text-muted-foreground">
-                    Tidak ada data
-                  </p>
-                  <p class="text-xs text-muted-foreground/80">
-                    Klik "Tambah Property" untuk menambahkan data baru
-                  </p>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow
+    <!-- Properties Cards -->
+    <div>
+      <template v-if="loading">
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <Card v-for="i in 4" :key="i" class="overflow-hidden">
+            <div class="w-full bg-muted aspect-video">
+              <Skeleton class="h-full w-full" />
+            </div>
+            <div class="px-6 space-y-3">
+              <Skeleton class="h-5 w-3/4" />
+              <Skeleton class="h-4 w-1/2" />
+              <Skeleton class="h-4 w-1/3" />
+              <Skeleton class="h-5 w-2/3" />
+              <Skeleton class="h-4 w-1/2" />
+              <div class="flex items-center justify-end gap-2 pt-2">
+                <Skeleton class="h-8 w-8 rounded-md" />
+                <Skeleton class="h-8 w-8 rounded-md" />
+              </div>
+            </div>
+          </Card>
+        </div>
+      </template>
+
+      <template v-else-if="properties.length === 0">
+        <Card class="flex items-center justify-center">
+          <div
+            class="flex flex-col items-center justify-center gap-2 px-6 py-10 text-center"
+          >
+            <Icon
+              name="lucide:inbox"
+              class="h-10 w-10 text-muted-foreground/50"
+            />
+            <p class="text-sm font-medium text-muted-foreground">
+              Tidak ada data
+            </p>
+            <p class="text-xs text-muted-foreground/80">
+              Klik "Tambah Property" untuk menambahkan data baru
+            </p>
+          </div>
+        </Card>
+      </template>
+
+      <div v-else class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <Card
+          v-for="item in properties"
+          :key="item.id"
+          class="cursor-pointer overflow-hidden p-0"
+          @click="navigateToEdit(item.id)"
+        >
+          <!-- Thumbnail -->
+          <div class="w-full bg-muted aspect-video">
+            <img
+              v-if="item.thumbnailUrl"
+              :src="item.thumbnailUrl"
+              :alt="item.title"
+              class="h-full w-full object-cover"
+            />
+            <div
               v-else
-              v-for="item in properties"
-              :key="item.id"
-              class="transition-colors hover:bg-muted/50"
+              class="flex h-full w-full items-center justify-center text-xs text-muted-foreground"
             >
-              <TableCell class="font-medium text-foreground">{{
-                item.title
-              }}</TableCell>
-              <TableCell class="text-muted-foreground">
-                <Badge
-                  v-if="item.location && item.location.name"
-                  variant="secondary"
-                  class="text-xs"
+              Tidak ada thumbnail
+            </div>
+          </div>
+
+          <div class="flex h-full flex-col gap-3 px-6 pb-4">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-semibold text-foreground line-clamp-2">
+                {{ item.title }}
+              </h3>
+              <Badge
+                v-if="item.location && item.location.name"
+                variant="secondary"
+                class="text-[10px] whitespace-nowrap"
+              >
+                {{ item.location.name }}
+              </Badge>
+              <span
+                v-else
+                class="text-[10px] text-muted-foreground/60 whitespace-nowrap"
+              >
+                -
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs text-muted-foreground">
+              <Badge
+                v-if="item.type && item.type.name"
+                variant="outline"
+                class="text-[10px]"
+              >
+                {{ item.type.name }}
+              </Badge>
+              <span v-else class="text-[10px] text-muted-foreground/60">
+                Tipe tidak ada
+              </span>
+            </div>
+
+            <div class="text-sm text-muted-foreground">
+              {{ item.bedrooms }} KT / {{ item.bathrooms }} KM
+            </div>
+
+            <div class="mt-auto flex items-center justify-between pt-2">
+              <div class="font-semibold text-foreground">
+                {{ item.price }}
+              </div>
+              <div class="flex items-center justify-end gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent"
+                  @click.stop="navigateToEdit(item.id)"
                 >
-                  {{ item.location.name }}
-                </Badge>
-                <span v-else class="text-xs text-muted-foreground/60">-</span>
-              </TableCell>
-              <TableCell class="text-muted-foreground">
-                <Badge
-                  v-if="item.type && item.type.name"
-                  variant="outline"
-                  class="text-xs"
+                  <Icon name="lucide:pencil" class="h-4 w-4" />
+                  <span class="sr-only">Edit</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  @click.stop="openDeleteModal(item)"
                 >
-                  {{ item.type.name }}
-                </Badge>
-                <span v-else class="text-xs text-muted-foreground/60">-</span>
-              </TableCell>
-              <TableCell class="font-medium text-foreground">{{
-                item.price
-              }}</TableCell>
-              <TableCell class="text-muted-foreground text-sm">
-                {{ item.bedrooms }} KT / {{ item.bathrooms }} KM
-              </TableCell>
-              <TableCell class="text-right">
-                <div class="flex items-center justify-end gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    class="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent"
-                    @click="navigateToEdit(item.id)"
-                  >
-                    <Icon name="lucide:pencil" class="h-4 w-4" />
-                    <span class="sr-only">Edit</span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    class="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                    @click="openDeleteModal(item)"
-                  >
-                    <Icon name="lucide:trash-2" class="h-4 w-4" />
-                    <span class="sr-only">Hapus</span>
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+                  <Icon name="lucide:trash-2" class="h-4 w-4" />
+                  <span class="sr-only">Hapus</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
 
     <!-- Delete confirmation modal -->
-    <Dialog :open="isDeleteModalOpen" @update:open="(val) => !val && closeDeleteModal()">
+    <Dialog
+      :open="isDeleteModalOpen"
+      @update:open="(val) => !val && closeDeleteModal()"
+    >
       <DialogContent class="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Hapus Property</DialogTitle>
           <DialogDescription>
-            Apakah Anda yakin ingin menghapus property "{{ deleteTarget?.title }}"?
-            Tindakan ini tidak dapat dibatalkan.
+            Apakah Anda yakin ingin menghapus property "{{
+              deleteTarget?.title
+            }}"? Tindakan ini tidak dapat dibatalkan.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter class="gap-2">
@@ -186,6 +200,7 @@ import { usePropertiesState } from "@/services/useStateProperties";
 import SectionHeader from "@/components/dashboard/SectionHeader.vue";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Card from "@/components/ui/card/Card.vue";
 import {
   Dialog,
   DialogContent,
@@ -194,14 +209,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
 
 const router = useRouter();
