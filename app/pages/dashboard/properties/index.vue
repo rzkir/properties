@@ -10,7 +10,7 @@
     >
       <template #actions>
         <NuxtLink
-          :to="{ name: 'dashboard-properties-id', params: { id: 'new' } }"
+          to="/dashboard/properties/new"
           class="inline-flex w-full lg:w-auto"
         >
           <Button class="w-full lg:w-auto" as="span">
@@ -20,6 +20,32 @@
         </NuxtLink>
       </template>
     </SectionHeader>
+
+    <!-- Search -->
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+      <div class="relative flex-1">
+        <Icon
+          name="lucide:search"
+          class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+        />
+        <Input
+          v-model="searchQuery"
+          type="search"
+          placeholder="Cari judul, slug, atau lokasi..."
+          class="h-10 pl-10 pr-4 text-foreground"
+          @keydown.enter.prevent="runSearch"
+        />
+      </div>
+      <Button
+        type="button"
+        variant="secondary"
+        class="h-10 shrink-0"
+        @click="runSearch"
+      >
+        <Icon name="lucide:search" class="mr-2 h-4 w-4" />
+        Cari
+      </Button>
+    </div>
 
     <!-- Properties Cards -->
     <div>
@@ -50,14 +76,22 @@
             class="flex flex-col items-center justify-center gap-2 px-6 py-10 text-center"
           >
             <Icon
-              name="lucide:inbox"
+              :name="searchQuery ? 'lucide:search' : 'lucide:inbox'"
               class="h-10 w-10 text-muted-foreground/50"
             />
             <p class="text-sm font-medium text-muted-foreground">
-              Tidak ada data
+              {{
+                searchQuery
+                  ? "Tidak ada hasil untuk pencarian"
+                  : "Tidak ada data"
+              }}
             </p>
-            <p class="text-xs text-muted-foreground/80">
-              Klik "Tambah Property" untuk menambahkan data baru
+            <p class="text-xs text-muted-foreground">
+              {{
+                searchQuery
+                  ? "Coba kata kunci lain atau kosongkan pencarian"
+                  : 'Klik "Tambah Property" untuk menambahkan data baru'
+              }}
             </p>
           </div>
         </Card>
@@ -151,6 +185,25 @@
           </div>
         </Card>
       </div>
+
+      <!-- Pagination (warna mengikuti tema) -->
+      <div
+        v-if="!loading && properties.length > 0"
+        class="pagination-theme mt-6 flex justify-center"
+      >
+        <Pagination
+          :page="page"
+          :total="paginationTotal"
+          :items-per-page="limit"
+          class="rounded-lg px-4 py-2 text-foreground shadow-sm"
+          @update:page="onPageChange"
+        >
+          <PaginationContent class="gap-1">
+            <PaginationPrevious />
+            <PaginationNext />
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
 
     <!-- Delete confirmation modal -->
@@ -194,12 +247,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { usePropertiesState } from "@/services/useStateProperties";
 import SectionHeader from "@/components/dashboard/SectionHeader.vue";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import Card from "@/components/ui/card/Card.vue";
 import {
   Dialog,
@@ -210,12 +264,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const router = useRouter();
 const {
   properties,
   loading,
   fetchProperties,
+  searchQuery,
+  page,
+  limit,
+  nextPage,
+  prevPage,
   isDeleteModalOpen,
   deleteTarget,
   deleting,
@@ -224,11 +289,38 @@ const {
   handleConfirmDelete,
 } = usePropertiesState();
 
+function runSearch() {
+  fetchProperties(1);
+}
+
+// Total items for PaginationRoot: enough so pageCount reflects nextPage
+const paginationTotal = computed(
+  () => page.value * limit.value + (nextPage.value ? limit.value : 0),
+);
+
+function onPageChange(newPage: number) {
+  fetchProperties(newPage); // uses current searchQuery from state
+}
+
 function navigateToEdit(id: string) {
   router.push(`/dashboard/properties/${id}`);
 }
 
 onMounted(() => {
-  fetchProperties();
+  fetchProperties(1);
 });
 </script>
+
+<style scoped>
+.pagination-theme :deep([data-slot^="pagination-"]) {
+  color: var(--foreground);
+}
+.pagination-theme :deep([data-slot^="pagination-"]:hover:not(:disabled)) {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+.pagination-theme :deep([data-slot^="pagination-"]:disabled) {
+  color: var(--muted-foreground);
+  opacity: 0.6;
+}
+</style>

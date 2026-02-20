@@ -471,6 +471,49 @@ const propertiesDeleteModalOpen = ref(false);
 const propertiesDeleteTarget = ref<Property | null>(null);
 const propertiesDeleting = ref(false);
 
+// Pagination state for properties list
+const propertiesListLoading = ref(false);
+const propertiesPage = ref(1);
+const propertiesNextPage = ref(false);
+const propertiesPrevPage = ref(false);
+const propertiesSearchQuery = ref('');
+const PROPERTIES_PAGE_LIMIT = 10;
+
+interface PropertiesListResponse {
+  data: Property[];
+  page: number;
+  limit: number;
+  nextPage: boolean;
+  prevPage: boolean;
+}
+
+async function fetchPropertiesList(page = 1, search?: string) {
+  propertiesListLoading.value = true;
+  try {
+    const searchTerm = search !== undefined ? search : propertiesSearchQuery.value;
+    const trimmed = searchTerm.trim();
+
+    let url: string;
+    if (trimmed) {
+      const params = new URLSearchParams({ q: trimmed, page: String(page) });
+      url = `/properties/search?${params.toString()}`;
+    } else {
+      url = `/properties?page=${page}`;
+    }
+
+    const res = await apiFetch<PropertiesListResponse>(url);
+    propertiesCrud.items.value = res.data ?? [];
+    propertiesPage.value = res.page ?? 1;
+    propertiesNextPage.value = res.nextPage ?? false;
+    propertiesPrevPage.value = res.prevPage ?? false;
+  } catch (error: any) {
+    console.error('[FE] Fetch properties list error:', error);
+    toast.error('Gagal memuat data properties');
+  } finally {
+    propertiesListLoading.value = false;
+  }
+}
+
 function openPropertiesDeleteModal(item: Property) {
   propertiesDeleteTarget.value = item;
   propertiesDeleteModalOpen.value = true;
@@ -487,9 +530,16 @@ async function handlePropertiesConfirmDelete() {
   if (!propertiesDeleteTarget.value) return;
   propertiesDeleting.value = true;
   try {
-    await propertiesCrud.performDelete(propertiesDeleteTarget.value);
+    await apiFetch(`/properties/${propertiesDeleteTarget.value.id}`, {
+      method: 'DELETE',
+    });
+    toast.success('Property berhasil dihapus');
     propertiesDeleteModalOpen.value = false;
     propertiesDeleteTarget.value = null;
+    await fetchPropertiesList(propertiesPage.value);
+  } catch (error: any) {
+    console.error('[FE] Delete property error:', error);
+    toast.error(error?.data?.message || 'Gagal menghapus property');
   } finally {
     propertiesDeleting.value = false;
   }
@@ -499,14 +549,21 @@ export function usePropertiesState() {
   return {
     // CRUD
     properties: propertiesCrud.items,
-    loading: propertiesCrud.loading,
+    loading: propertiesListLoading,
     form: propertiesCrud.form,
     errors: propertiesCrud.errors,
     submitting: propertiesCrud.submitting,
-    fetchProperties: propertiesCrud.fetch,
+    fetchProperties: fetchPropertiesList,
     handleSubmit: propertiesCrud.handleSubmit,
     performDelete: propertiesCrud.performDelete,
     resetForm: propertiesCrud.resetForm,
+    // Pagination
+    page: propertiesPage,
+    limit: ref(PROPERTIES_PAGE_LIMIT),
+    nextPage: propertiesNextPage,
+    prevPage: propertiesPrevPage,
+    // Search
+    searchQuery: propertiesSearchQuery,
     // Delete modal
     isDeleteModalOpen: propertiesDeleteModalOpen,
     deleteTarget: propertiesDeleteTarget,
